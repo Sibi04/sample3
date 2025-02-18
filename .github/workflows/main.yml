@@ -68,6 +68,8 @@ jobs:
       - name: Merge stage → main
         run: |
          git checkout main  # Checkout the main branch
-         git merge stage --no-ff  # Merge stage into main, no fast-forward merge
+         git merge stage --no-ff --allow-unrelated-histories  # Merge stage into main, no fast-forward merge
+         git add .
+         git commit -m "main commit"
          git push origin main  # Push the merge to remote main branch
 
