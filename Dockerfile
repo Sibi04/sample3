@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Install any dependencies
-RUN pip install --no-cache-dir -r requirement.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Command to run the application
 CMD ["python", "project.py"]
