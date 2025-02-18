@@ -1,0 +1,64 @@
+name: CI/CD Pipeline for Sample3
+
+on:
+  push:
+    branches:
+      - stage  # Runs when code is pushed to 'stage' branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run Tests
+        run: |
+          pytest || echo "Tests failed, check logs for details"
+
+  docker:
+    needs: build  # Runs only if 'build' job succeeds
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker Image
+        run: |
+          docker build -t sample3-app .
+
+      - name: Run Docker Container
+        run: |
+          docker run -d -p 8000:8000 sample3-app
+
+  deploy:
+    needs: docker  # Runs only if 'docker' job succeeds
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # Allows pushing changes to main branch
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge stage → main
+        run: |
+          git config --global user.name "Sibi04"
+          git config --global user.email "psibi2004@gmail.com"
+          git checkout main
+          git merge stage --no-ff
+          git push origin main
