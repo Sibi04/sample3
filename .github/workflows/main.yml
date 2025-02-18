@@ -69,5 +69,7 @@ jobs:
         run: |
          git checkout main  # Checkout the main branch
          git merge stage --no-ff --allow-unrelated-histories  # Merge stage into main, no fast-forward merge
+         git add .github/workflows/main.yml  # Stage the resolved conflict
+         git commit -m "Msg1"
          git push origin main  # Push the merge to remote main branch
 
