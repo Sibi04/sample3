@@ -51,7 +51,7 @@ jobs:
       contents: write  # Allows pushing changes to main branch
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository 
         uses: actions/checkout@v3
         with:
          token: ${{ secrets.GITHUB_TOKEN }}  # Ensure GitHub token is used to access repo
